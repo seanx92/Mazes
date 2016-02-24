@@ -1,5 +1,10 @@
 class Maze
 
+	##
+	# Constructor for class Maze.
+	#
+	# Initialize a n by m maze.
+
 	def initialize(n, m)
 		@n = n
 		@m = m
@@ -8,6 +13,9 @@ class Maze
 		@direction = [[1, 0], [-1, 0], [0, 1], [0, -1]]
 		@validMaze = false
 	end
+
+	##
+	# load(arg) method that initializes the maze using a string of ones and zeros as above
 
 	def load(seq)
 		raise TypeError, "Invalid input type" if not seq.is_a?(String)
@@ -32,6 +40,9 @@ class Maze
 		@validMaze = true
 	end
 
+	##
+	# display method that prints a diagram of the maze on the console.
+
 	def display
 		raise "No valid maze" if not @validMaze
 		for i in 0..(2 * @m)
@@ -44,6 +55,9 @@ class Maze
 		print "\n"
 	end
 
+	##
+	# Depth first search. Private method.
+
 	def dfs(direction, x, y, endX, endY)
 		return false if @maze[y][x] == '1' or @visited[y][x] == true
 		@visited[y][x] = true
@@ -52,12 +66,20 @@ class Maze
 		dfs(1, x + 1, y, endX, endY) or dfs(2, x, y + 1, endX, endY) or dfs(-1, x - 1, y, endX, endY) or dfs(-2, x, y - 1, endX, endY)
 	end
 
+	##
+	# solve(begX, begY, endX, endY) method that determines if there’s a way to walk from a specified beginning position to a specified ending position.
+	#
+	# Return false if there is no such way, otherwise return true.
+
 	def solve(begX, begY, endX, endY)
 		raise "No valid maze" if not @validMaze
 		return false if @maze[begY * 2 + 1][begX * 2 + 1] == '1' or @maze[endY * 2 + 1][endX * 2 + 1] == '1'
 		@visited = Array.new(2 * @m + 1) { Array.new(2 * @n + 1, false) }
 		dfs(0, begX * 2 + 1, begY * 2 + 1, endX, endY)
 	end
+
+	##
+	# trace(begX, begY, endX, endY) method that is just like solve() but traces the positions that the solution visits.
 
 	def trace(begX, begY, endX, endY)
 		raise "No valid maze" if not @validMaze
@@ -86,6 +108,11 @@ class Maze
 		return true
 	end
 
+	##
+	# redesign() which will reset all the cells and walls and come up with a random new maze of the same size. 
+	#
+	# Use a randomized Prim Algorithm.
+	
 	def redesign
 		for i in 0..(2 * @m)
 			for j in 0..(2 * @n)
